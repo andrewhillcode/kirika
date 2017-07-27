@@ -5,6 +5,10 @@
 	<meta charset="UTF-8">
 	<!-- Chart.js JS -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+	<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
 	<!-- Boostrap JS and CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -19,5 +23,92 @@
 </body>
 
 <!-- Initialize custom scripts after page is loaded -->
-<script src="/scripts.js"></script>
+<script> 
+	$.getJSON('http://localhost:3000/api/series/40', function(data){
+	    console.log(data);
+	    var canvas = document.getElementById('chart');
+
+		var colour1 = '#3fb8ff';
+		var colour2 = '#ff3f40';
+
+		var labelsArray = [];
+
+		for (i = 1; i <= data.data.length; i++) {
+			labelsArray.push(i);
+		} 
+
+		new Chart(canvas, {
+		  type: 'line',
+		  data: {
+		    labels: labelsArray,
+		    datasets: [
+		        {
+		            label: 'A',
+		            yAxisID: 'A',
+		            fill: false,
+		            borderColor: colour1,
+		            strokeColor: colour1,
+		            pointColor: colour1,
+		            pointStrokeColor: colour1,
+		            pointHighlightFill: colour1,
+		            pointHighlightStroke: colour1,
+		            backgroundColor: colour1,
+		            data: data.data
+		        }, {
+		            label: 'B',
+		            yAxisID: 'B',
+		            fill: false,
+		            borderColor: colour2,
+		            strokeColor: colour2,
+		            pointColor: colour2,
+		            pointStrokeColor: colour2,
+		            pointHighlightFill: colour2,
+		            pointHighlightStroke: colour2,
+		            backgroundColor: colour2,
+		            data: data.data
+		        }]
+		    },
+		    options: {
+		    	title: {
+		    		display: true,
+		    		text: data.name
+		    	},
+		        scales: {
+		            xAxes: [
+		                {}, 
+		                {
+		                    gridLines: {
+		                        color: "#262a2c"
+		                    }
+		                }
+		            ],
+		            yAxes: [
+		                {
+		                    id: 'A',
+		                    type: 'linear',
+		                    position: 'left',
+		                    gridLines: {
+		                        display:false,
+		                        color: "#262a2c"
+		                    }   
+		                }, {
+		                    id: 'B',
+		                    type: 'linear',
+		                    position: 'left',
+		                    gridLines: {
+		                      color: "#262a2c"
+		                    },
+		                    ticks: {
+		                      max: 10,
+		                      min: 1
+		                    }
+		                }
+		            ]
+		        }
+		    }
+		});
+
+			});
+</script>
+<!-- <script src="/scripts.js"></script> -->
 </html>
