@@ -18,13 +18,13 @@
 <body> 
 	<br/><br/><br/><br/><br/><br/><br/><br/>
 	<div class='container'>
-		<canvas id='chart' />
+		<canvas id='chart'/>
 	</div>
 </body>
 
 <!-- Initialize custom scripts after page is loaded -->
 <script> 
-	$.getJSON('http://localhost:3000/api/series/40', function(data){
+	$.getJSON('http://localhost:3000/api/series/1', function(data){
 	    console.log(data);
 	    var canvas = document.getElementById('chart');
 

@@ -1,4 +1,4 @@
-var express = require('express');
+﻿var express = require('express');
 var https = require('https');
 var request = require('request');
 var cheerio = require('cheerio');
@@ -33,7 +33,9 @@ scraperjs.StaticScraper.create('https://myanimelist.net/forum/?topicid=1602544')
 */
 
 
-var url = 'https://myanimelist.net/forum/?topicid=1602544'
+//var url = 'https://myanimelist.net/forum/?topicid=1602544'
+//var url = 'https://myanimelist.net/forum/?topicid=1580412'
+var url = 'https://myanimelist.net/forum/?topicid=1632032'
 //var url = 'https://myanimelist.net/forum/?topicid=1365483'
 //var url = 'https://myanimelist.net/forum/?topicid=1264633'
 //var url = 'https://myanimelist.net/forum/?topicid=1240339'
@@ -43,6 +45,16 @@ var url = 'https://myanimelist.net/forum/?topicid=1602544'
 var globalBoy;
 
 request({url:url}, function(error, response, body){
+    var mysql = require('mysql');
+    var connection  = mysql.createConnection({
+      host            : 'localhost',
+      user            : 'root',
+      password        : 'password',
+      database        : 'chihiro'
+    });
+
+    connection.connect();
+
     if (!error){
         var $ = cheerio.load(body);
 
@@ -117,10 +129,27 @@ request({url:url}, function(error, response, body){
 
         globalBoy = seriesArray
 
+        for (i = 0; i < globalBoy.length; i++) {
+            connection.query({
+                    sql: 'INSERT INTO anime (id, title, scores) VALUES (?, ?, ?)',
+                    values: [i, globalBoy[i].title, JSON.stringify(globalBoy[i].ratings)]
+                },
+                function (error, results, fields) {
+              // error will be an Error if one occurred during the query 
+              // results will contain the results of the query 
+              // fields will contain information about the returned results fields (if any) 
+                //console.log(error)
+            });
+        }
+
         //console.log($('.forum_boardrow1').text().split("\n"))
     } else {
         console.log("We’ve encountered an error: " + error);
     }
+
+
+    connection.end();
+
 })
 
 
